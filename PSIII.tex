@@ -1,0 +1,494 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{amsthm}
+% Por facilidad, se definen los conjuntos mas comunes
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\p}{\mathbb{P}}
+\newcommand{\todo}{\textrm{ para todo }}
+\newcommand{\ssi}{\textrm{ si y solo si }}
+% Se definen operadores comunes
+\newcommand\norm[1]{\left\lVert#1\right\rVert}
+
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+
+\newtheorem{manualtheoreminner}{Ejercicio}
+\newenvironment{manualtheorem}[1]{%
+  \renewcommand\themanualtheoreminner{#1}%
+  \manualtheoreminner
+}{\endmanualtheoreminner}
+
+\newenvironment{solucion}
+  {\renewcommand\qedsymbol{$\square$}\begin{proof}[\textbf{Solución}]}
+  {\end{proof}}
+% Se define la forma de cada enunciado, en este caso, de un teorema
+\newtheorem{eje}{Ejercicio}
+\usepackage[left=0.8in, top=0.7in, total={6.2in,8in}]{geometry}
+\usepackage[normalem]{ulem}
+\renewcommand\ULthickness{1.0pt}   %%---> For changing thickness of underline
+\setlength\ULdepth{1.3ex}%\maxdimen ---> For changing depth of underline
+
+\begin{document}
+    %\thispagestyle{empty}
+    \noindent
+    \begin{minipage}[l]{0.1\textwidth}
+    \noindent
+    \includegraphics[width=1.8\textwidth]{logo1.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.8\textwidth}
+    \begin{center}
+    {\large	Universidad de San Carlos de Guatemala \par
+    \large	Escuela de Ciencias Físicas y Matemáticas	\par
+    \large	Departamento de Matemáticas 	\par
+    \large \textbf{Estadística 3 (M704)}	\par
+    \small	Primer semestre, marzo de 2020}
+    \end{center}
+    \end{minipage}
+    \par
+    \vspace{0.2in}
+    \noindent
+    \uline{Profesor: \textbf{Frank Fritzsche }		\hfill  Autor: \textbf{201513630 Javier Navarro}}
+    \par 
+    \vspace{0.15in}
+    \noindent
+    \centering
+    {\Large \bfseries 	\textsc{\textbf{Cadenas de Markov}} }\\
+    \vspace{0.2in}
+    \section*{Capítulo 3: Problemas de juego}
+    \begin{manualtheorem}{3.1} Consideramos un problema de juego con la posibilidad de un empate, es decir, en el momento $n$ la ganancia $X_n$ del jugador $A$ puede aumentar en una unidad con probabilidad $r> 0$, disminuya en una unidad con probabilidad $r$, o permanezca estable con probabilidad $1 - 2r$. Sea:
+    \begin{align*}
+        f(k):=\p(R_A|X_0=k)
+    \end{align*}
+    denota la probabilidad de ruina del jugador A y sea:
+    \begin{align*}
+        h(k):=\mathbb{E}(T_0|X_0=k)
+    \end{align*}
+    denota el valor esperado de la duración del juego $T_{0,S}$ a partir de $X_0=k$, $0\leq k \leq S$.
+    
+    \renewcommand{\labelenumi}{(\alph{enumi})}
+    \begin{enumerate}
+        
+        \item Usando el análisis del primer paso, escriba la ecuación de diferencia satisfecha por $f(k)$ y sus condiciones de frontera, $0 \leq k \leq S$. Nos referimos a esta ecuación como \textit{la ecuación homogénea}
+        \begin{solucion}
+            Se tiene que:
+            \begin{align*}
+                f(k)=(1-2r)f(k)+rf(k)+rf(k-1),
+            \end{align*}
+            luego:
+            \begin{align*}
+                f(k)= \frac{1}{2} f(k+1)+ \frac{1}{2}f(k-1)& &1\leq k\leq S-1
+            \end{align*}
+            con las condiciones de frontera $f(0)=1$ y $f(S)=0$.
+        \end{solucion}
+        
+        \item Resuelva la ecuación homogénea del inciso (a) por su método preferido. ¿Es esta solución compatible con su intuición del problema? ¿Porqué?
+        \begin{solucion}
+            Se sabe que la solución general de la ecuación homogénea tiene la forma:
+            \begin{align*}
+                f(k)=C_1+C_2k & &  0\leq k\leq S
+            \end{align*}
+            tomando las condiciones de frontera se obtiene:
+            \begin{align*}
+                f(k)=\frac{S-k}{S} & &  0\leq k\leq S.
+            \end{align*}
+            Intuitivamente el problema es un juego justo para todos los valores de $r$, así que la probabilidad de ruina debería ser la misma para toda $r\in(0,\frac{1}{2}$, el cual es el caso.
+        \end{solucion}
+        
+        \item Usando el análisis del primer paso, escriba la ecuación de diferencia satisfecha por $h(k)$ y sus condiciones de frontera $0\leq k \leq S$.
+        \begin{solucion}
+            Se sabe que:
+            \begin{align*}
+                h(k)&=(1-2r)(1+h(k))+r(1+h(k+1)) +r(1+h(k-1))\\
+                h(k)&=1+(1-2r)h(k)+rh(k+1)+rh(k-1)
+            \end{align*}
+            luego:
+            \begin{align*}
+                h(k)=\frac{1}{2r}+\frac{1}{2}h(k+1) + \frac{1}{2}h(k-1)
+            \end{align*}
+            con las condiciones de frontera $h(0)=0$ y $h(S)=0$. Es evidente que $r$ debe ser estrictamente positiva, de otra forma si $r=0$, es necesario que $h(k)=\infty$ para todo $k=1, \dots, S-1$ y $h(0)=h(S)=0$.
+        \end{solucion}
+        
+        \item Busque una solución particular para la ecuación del inciso (c).
+        \begin{solucion}
+            Al proponer una solución de la forma $h(k)=Ck^2$, se determina
+            \begin{align*}
+                Ck^2=\frac{1}{2r}+\frac{1}{2}C(k+1)^2+\frac{1}{2}C(k-1)^2
+            \end{align*}
+            entonces $C$ debe ser igual a $C=-1/(2r)$, así que $k \mapsto -\frac{k^2}{2r}$ es una solución particular.
+        \end{solucion}
+        
+        \item Resuelva la ecuación del inciso (c).\\
+        Consejo: recuerde que la solución general de la ecuación es la suma de una solución particular y una solución de la ecuación homogénea.
+        \begin{solucion}
+            Se sabe que la solución general tiene la forma:
+            \begin{align*}
+                h(k)=C_1 + C_2k-\frac{k^2}{2r} & &  0 \leq k \leq S
+            \end{align*}
+            Tomando las condiciones de frontera se obtiene:
+            \begin{align*}
+                h(k)=\frac{k}{2r}(S-k) & & 0 \leq k \leq S
+            \end{align*}
+        \end{solucion}
+        
+        \item ¿Cómo se comporta la duración media $h(k)$ cuando $r$ tiende a cero? ¿Es esta solución compatible con su intuición del problema? ¿Porqué?
+        \begin{solucion}
+            A partir de cualquier estado $k \in {1, 2,\dots,S - 1}$, la duración media tiende a infinito cuando $r$ tiende a cero.
+            Cuando $r$ tiende a cero la probabilidad $1 - 2r$ de un empate aumenta y el juego debería tomar más tiempo.
+        \end{solucion}
+    \end{enumerate}
+    
+    \end{manualtheorem}
+    
+    \begin{manualtheorem}{3.2}
+    Consideremos un proceso de tiempo discreto $(X_n)_{n\geq0}$ que modela la fortuna de un apostador dentro de ${0, 1,\dots,S}$, con las probabilidades de transición.
+    \begin{align*}
+        \p(X_{n+1}=k+1 \mid X_n = k)&=p & &  0 \leq k \leq S-1\\
+        \p(X_{n+1}=k-1 \mid X_n = k)&=q & &  0 \leq k \leq S
+    \end{align*}
+    y luego:
+    \begin{align*}
+        \p(X_{n+1}=0 \mid X_n = 0)=q
+    \end{align*}
+    para toda $n\in \mathbb{N}=\{0, 1, 2, \dots\}$ donde $q=1-p$ y $p\in(0,1]$. En este modelo al apostador le podría estar permitido ``rebotar'' después de alcanzar 0. 
+    Sea
+    \begin{align*}
+        W=\bigcup_{n\in \mathbb{N}} \{X_{n}=S\}
+    \end{align*}
+    el evento en el que el jugador eventualmente gana el juego.
+    \renewcommand{\labelenumi}{(\alph{enumi})}
+    \begin{enumerate}
+        \item Sea
+        \begin{align*}
+            f(k)=\p(W\mid X_0 = k)
+        \end{align*}
+        la probabilidad de que el jugador eventualmente gane después de empezar del estado $k\in{0, 1, \dots,S}$. Usando el análisis de primer paso, escribir las ecuaciones de diferencia satisfechas $f(k)$, $k=0, 1, \dots, S-1$, y sus condiciones de contorno. Esta pregunta es estándar, sin embargo hay que prestar atención al comportamiento especial del proceso en el estado 0.
+        \begin{solucion}
+            Se tiene
+            \begin{align*}
+                f(k)=pf(k+1)+qf(k-1) & & k=1,\dots,S
+            \end{align*}
+            con la condición de frontera $f(S)=1$ y
+            \begin{align*}
+                f(0)=pf(1)+qf(0),& & \textrm{para } k=0
+            \end{align*}
+        \end{solucion}
+        
+        \item Calcular $\p(W | X_0 = k)$ para todo $k = 0, 1,\dots,S$ resolviendo las ecuaciones del inciso 1
+        \begin{solucion}
+            Observamos que la función $f(k) = C$ es la solución de las dos ecuaciones del ejercicio anterior y la condición de frontera $f(S)=1$ da $C=1$, por lo tanto
+            \begin{align*}
+                f(k) = \p(W | X_0 = k)=1\textrm{ para todos los } k = 0, 1,\dots,S.
+            \end{align*}
+        \end{solucion}
+        
+        \item Sea
+        \begin{align*}
+            T_S=\inf\{n\geq 0: X_n=S\}
+        \end{align*}
+        el tiempo del primer golpe de $S$ por el proceso $(X_n)_{n\geq0}$ y
+        \begin{align*}
+            g(k)=\mathbb{E}[T_S\mid X_0 = k]
+        \end{align*}
+        el tiempo esperado hasta que el apostador gane después de empezar desde el estado $k\in{0, 1, \dots, S}$. Usando el análisis de primer paso, escribir las ecuaciones de diferencia satisfechas por $g(k)\textrm{, para }k=0$, $1, \dots, S-1$, y establecer las correspondientes condiciones de frontera.
+        \begin{solucion}
+            Se tiene:
+            \begin{align*}
+                g(k)=1+pg(k+1)+qg(k-1)\textrm{, }& & k=1,\dots,S-1
+            \end{align*}
+            Con las condiciones de frontera:
+            \begin{align*}
+                g(S)&=0\\
+                g(0)&=1+pg(1)+qg(0)
+            \end{align*}
+        \end{solucion}
+        
+        \item Calcule $\mathbb{E}[T_S \mid X_0 = k]$ para todo $k=0,1,\dots,S$ resolviendo las ecuaciones del inciso 3
+        \begin{solucion}
+            Si $p\neq q$ la solución de ecuación homogénea
+            \begin{align*}
+                g(k)=pg(k+1)+qg(k-1)\textrm{, }k=1,\dots,S-1
+            \end{align*}
+            tiene la forma:
+            \begin{align*}
+                g(k)=C_1+C_2(\frac{q}{p})^k\textrm{, para } k=1,\dots,S-1
+            \end{align*}
+            Además $k \mapsto \frac{k}{p-q}$ es una solución particular, entonces la solución general tiene la forma:
+            \begin{align*}
+                g(k)=\frac{k}{q-p}+C_1+C_2(\frac{q}{p})^k\textrm{, para }k=0,\dots,S
+            \end{align*}
+            con
+            \begin{align*}
+                0=g(S)=\frac{S}{q-p}+C_1+C_2(\frac{q}{p})^S
+            \end{align*}
+            y
+            \begin{align*}
+                pg(0)=p(C_1+C_2)=1+pg(1)=1+p(\frac{1}{q-p}+C_1+C_2\frac{q}{p})
+            \end{align*}
+            Por lo tanto
+            \begin{align*}
+                C_1=\frac{q(\frac{q}{p})^S}{(p-q)^2}-\frac{S}{q-p} \textrm{ y } C_2=-\frac{q}{(p-q)^2}
+            \end{align*}
+            que genera:
+            \begin{align*}
+            g(k)=\mathbb{E}[T_S \mid X_0 = k]=\frac{S-k}{p-q}+\frac{q}{(p-q)^2}((\frac{q}{p})^S-(\frac{q}{p})^k)& &\textrm{, para }k=0,\dots,S
+            \end{align*}
+            Ahora, cuando $p=q=\frac{1}{2}$, la solución de la ecuación homogénea está dada por:
+            \begin{align*}
+                g(k)=C_1+C_2k\textrm{, para }k=1,\dots,S-1
+            \end{align*}
+            Además la solución general tiene la forma:
+            \begin{align*}
+                g(k)=-k^2+C_1+C_2k\textrm{, para }k=1,\dots,S
+            \end{align*}
+            donde 
+            \begin{align*}
+                0=g(S)=-S^2+C_1+C_2S\textrm{, y }\\
+                \frac{g(0)}{2}=\frac{C_1}{2}=1+\frac{g(1)}{2}=1+\frac{(-1+C_1+C_2)}{2}
+            \end{align*}
+            Por lo tanto $C_1=S(S+1)$ y $C_2=-1$, entonces
+            \begin{align*}
+                g(k)=\mathbb{E}[T_S \mid X_0 = k]=(S+k+1)(S-k)\textrm{, para }k=0,\dots,S
+            \end{align*}
+        \end{solucion}
+        
+        \item Sea
+        \begin{align*}
+            T_0=\inf \{ n\geq 0 : X_n=0\}
+        \end{align*}
+        el primer tiempo de golpe de 0 por el proceso $(X_n)_{n\geq0}$. Usando los resultados previos escribir el valor de:
+        \begin{align*}
+            p_k:= \p(T_S< T_0\mid X_0=k)
+        \end{align*}
+        como una función de $p$, $S$, y $k\in \{0,\dots,S\}$
+        
+        \begin{solucion}
+            Se tiene:
+            \begin{align*}
+                p_k:= \p(T_S< T_0\mid X_0=k)=\frac{1-(\frac{q}{p})^k}{(\frac{q}{p})^S}\textrm{, para }k=0,\dots S
+            \end{align*}
+            dado que $p\neq q$, y $p_k= \frac{k}{S}$, $k=0,\dots S$ si $p=q=\frac{1}{2}$
+        \end{solucion}
+        
+        \item Explicar por qué la igualdad
+        \begin{align*}
+            \p(T_S< T_0\mid X_1=k+1, X_0=k)\\
+            =\p(T_S< T_0\mid X_1=k+1)\\
+            =\p(T_S< T_0\mid X_0=k+1)
+        \end{align*}
+        se cumple para $k\in \{0,\dots,S-1 \}$
+        \begin{solucion}
+            La igualdad se cumple porque dado que empezamos desde el estado $k+1$ en el tiempo 1, ya que $T_S<T_0$ o $T_S>T_0$ no depende del proceso pasado antes del tiempo 1. Además, no importa si empezamos por el estado $k +1$ en el momento 1 o en el momento 0
+        \end{solucion}
+        
+        \item Usando la relación del inciso anterior, demuestre que la probabilidad
+        \begin{align*}
+            \p(X_1=k+1\mid X_0=k, T_S < T_0)
+        \end{align*}
+        de un paso después dado que el estado $S$ es alcanzado primero, es igual a
+        \begin{align*}
+            \p(X_1=k+1\mid X_0=k, T_S < T_0)=p\frac{\p(T_S < T_0\mid X_0=k+1)}{\p(T_S < T_0\mid X_0=k)}=p\frac{p_{k+1}}{p_k}
+        \end{align*}
+        para $k=1,\dots S-1$ que se calcularán explícitamente a partir del resultado del inciso 5. ¿Cómo se compara esta probabilidad con el valor de $p$?
+        \begin{solucion}
+            \begin{align*}
+                \p(X_1=k+1\mid X_0=k, T_S < T_0)=\frac{\p(X_1=k+1\mid X_0=k, T_S < T_0)}{\p(X_0=k,T_S < T_0)}
+            \end{align*}
+            \begin{align*}
+                =\frac{\p(T_S < T_0\mid X_1=k+1,X_0=k)\p(X_1=k+1,X_0=k)}{\p(T_S < T_0, X_0=k)}=p\frac{\p(T_S < T_0\mid X_0=k+1)}{\p(T_S < T_0\mid X_0=k)}=p\frac{p_{k+1}}{p_k}
+            \end{align*}
+            para $k=1,\dots S-1$. se determina:
+            \begin{align*}
+                \p(X_1=k+1\mid X_0=k, T_S < T_0)=p\frac{1-(\frac{q}{p})^{k+1}}{1-(\frac{q}{p})^{k}}\textrm{, para }k=1,\dots S-1
+            \end{align*}
+            si $p=q=\frac{1}{2}$. Esta probabilidad es mayor que $p$
+        \end{solucion}
+        
+        \item Calcule la probabilidad
+        \begin{align*}
+            \p(X_1=k-1 \mid X_0 = k, T_0<T_S)\textrm{, para }k=1,\dots,S
+        \end{align*}
+        de un paso hacia atrás dado que el estado 0 se alcanza primero, utilizando argumentos similares al inciso 7.
+        \begin{solucion}
+            Se tiene
+            \begin{align*}
+                \p(X_1=k-1 \mid X_0 = k, T_0<T_S)=\frac{\p(X_1=k-1, X_0 = k, T_0<T_S)}{\p(X_0=k,T_0<T_S}\\[0.2pt]
+                =\frac{\p(T_0<T_S\mid X_1=k-1,X_0=k)\p(X_1=k-1,X_0=k)}{\p(T_0<T_S, X_0=k)}\\
+                =q\frac{\p(T_0<T_S \mid X_0= k-1)}{\p(T_0<T_S\mid X_0= k)}=q\frac{1-p{k-1}}{1-p_k}\textrm{, para }k=1,\dots,S-1
+            \end{align*}
+            dado que $p\neq q $ y $\p(X_1=k-1\mid X_0=k,T_0<T_S)=\frac{S+1-k}{2(S-k)}\textrm{, para }k=1,\dots,S-1$. Si $p=q=\frac{1}{2}$ esta probabilidad es mayor que $q$.
+        \end{solucion}
+        
+        \item Sea
+        \begin{align*}
+            h(k)=\mathbb{E}[T_S\mid X_0=k,T_S<T?0]\textrm{, para }k=1,\dots,S
+        \end{align*}
+        el tiempo esperado hasta que el jugador gana, dado que el estado 0 nunca se alcanza.Utilizando las probabilidades de transición (3.43), indique las ecuaciones de diferencia finita satisfechas por $h(k), k=1,\dots,S-1$, y sus condiciones de frontera
+        \begin{solucion}
+            \begin{align*}
+                p_kh(k)=p_k+pp_{k+1}h(k+1)+qp_{k-1}h(k-1)\textrm{, }k=1,\dots,S-1
+            \end{align*}
+            Con la condición de frontera $h(S)=0$
+        \end{solucion}
+        
+        \item Resuelva la ecuación del inciso anterior cuando $p=\frac{1}{2}$ y calcule $h(k)\textrm{, para }k=1,\dots,S$. ¿Qué se puede decir de $h(0)$?
+        \begin{solucion}
+            \begin{align*}
+                kh(k)=k+\frac{1}{2}(k+1)h(k+1)+\frac{1}{2}(k-1)h(k-1), k=1,\dots,S-1
+            \end{align*}
+            con $h(S)=0$ como condición de frontera. Tomando $g(k)=kh(k)$ Es evidente que $g(k)$ satisface:
+            \begin{align*}
+                g(k)=k+\frac{1}{2}g(k+1)+\frac{1}{2}g(k-1)\textrm{, para }k=1,\dots,S-1
+            \end{align*}
+            con $g(0)=0$ y $g(S)=0$ como condiciones de frontera. Notemos que $g(k)=Ck^3$ es una solución particular cuando $C=-\frac{1}{3}$, por lo tanto la solución tiene la forma:
+            \begin{align*}
+                g(k)=-\frac{1}{3}k^3+C_1+C_2k
+            \end{align*}
+            pero $C_1=0$ y $C_2=\frac{S^3}{3}$, entonces
+            \begin{align*}
+                g(k)=\frac{k}{3}(S^2-k^2)\textrm{, para }k=0,1,\dots,S
+            \end{align*}
+            por lo tanto
+            \begin{align*}
+                h(k)=\mathbb{E}[T_S\mid X_0=k,T_S<T_0]=\frac{S^2-k^2}{3}\textrm{, para }k=1,\dots,S
+            \end{align*}
+            $h(0)$ es indefinido ya que $\{X_0=0,T_S<T_0 \}$ tiene probabilidad 0
+        \end{solucion}
+    \end{enumerate}
+    \end{manualtheorem}
+    
+    
+    \newpage
+    \section*{Capítulo 4: Paseos al azar}
+    \begin{manualtheorem}{4.1}
+    Consideramos la caminata aleatoria simple $(S_n)_{n\in \mathbb{N}}$ de la Sección 4.1 con incrementos independientes y comenzamos en $S_0 = 0$, en la cual la probabilidad de avance es $p$ y la probabilidad de retroceso es $1-p$.
+    \renewcommand{\labelenumi}{(\alph{enumi})}
+    \begin{enumerate}
+        \item Enumere todos los caminos de muestra posibles que conducen a $S_4 = 2$ a partir de $S_0 = 0$
+        \begin{solucion}
+            $\binom{4}{3}=4$ 
+            \item Demostrar que: 
+            $$\p(S_4=2\mid S_0=0)= \binom{4}{3} p^3(1-p)=\binom{4}{1}p^3(1-p)$$
+            En cada uno de los 4 caminos hay 3 pasos hacia arriba con probabilidad $p$ y 1 paso hacia abajo con probabilidad $q=1-p$
+            $$= \binom{4}{3} p^3(1-p)=\binom{4}{1}p^3(1-p)$$
+        \end{solucion}
+        
+        \item Demuestre que si $n + k$ es par Se tiene:
+        $$\p(S_n=k|S_0=0)= \left\{\begin{matrix}
+        \binom{n}{(n+k)/2}p^{(n+k)/2}(1-p)^{(n-k)/2},  n+k $ par y $|k|\leq n\\ 
+        \p(S_n=k|S_0=0)=0; n+k $ par o $|k|>n
+        \end{matrix}\right.$$
+        \begin{solucion}
+            Dado que $$\p(S_{2n}=2k \mid S_0=0) = \binom{2n}{n+k} p^{n+k}q^{n-k}, -n\leq k\leq n$$ entonces es fácil ver que se cumple
+            $= \left\{\begin{matrix}
+            \binom{n}{(n+k)/2}p^{(n+k)/2}(1-p)^{(n-k)/2}, $ n+k par y $|k|\leq n\\ 
+            \p(S_n=k|S_0=0)=0;$ n+k par o $|k|>n
+            \end{matrix} \right\} $
+        \end{solucion}
+        
+        \item Muestre, mediante un argumento directo utilizando el análisis del primer paso en caminatas aleatorias, que $p_{n,k}:= \p(S_n = k | S_0 = 0)$ satisface la ecuación:
+        $$p_{n+1,k}=pp_{n,k-1}+qp_{n,k+1}$$
+        Bajo las condiciones de frontera: $p_{0,0}=1$ y $p_{0,k}=0$, $k\neq 0$
+        \begin{solucion}
+            Tomando $p_{n,k}:=\p(S_n=k)$ Se tiene:\\
+            $p_{n+1,k}=\p(S_{n+1}=k)=\p(S_{n+1}=k\mid S_0=0)=\p(S_{n+1}=k\mid S_1=1)\p(S_1=1\mid S_0=0)+\p(S_{n+1}=k\mid S_1=-1)\p(S_1=-1\mid S_0=0)=p\p(S_{n+1}=k\mid S_1=1)+q\p(S_{n+1}=k\mid S_1=-1)=p\p(S_{n+1}=k-1\mid S_1=0)+q\p(S_{n+1}=k+1\mid S_1=0)= p\p(S_{n}=k-1\mid S_0=0)+q\p(S_{n}=k+1\mid S_0=0)=pp_{n,k-1}+qp_{n,k+1}$\\
+            Lo que implica
+            \begin{align*}
+                p_{n+1,k}=pp_{n,k-1}+qp_{n,k+1}\todo n\in \mathbb{N}\textrm{ y }k\in \mathbb{Z}
+            \end{align*}
+        \end{solucion}
+        
+        \item Confirme que $p_{n, k} = \p (S_n = k \mid S_0 = 0)$ dado por (4.27) satisface la ecuación (4.28) y sus condiciones de frontera.
+        \begin{solucion}
+            Si $n+1+k$ es impar claramente satisface la ecuación (4.28)
+            Si $n+1+k$ es par Se tiene:\\[0.2cm]
+            \begin{align*}
+            pp_{n,k-1}+qp_{n,k+1}=&p\binom{n}{(n-1+k)/2}p^{(n-1+k)/2}(1-p)^{(n+1-k)/2}\\[0.2cm]
+            &+q\binom{n}{(n+1+k)/2}p^{(n+1+k)/2}(1-p)^{(n-1-k)/2}\\[0.2cm]
+            =&\binom{n}{(n-1+k)/2}p^{(n+1+k)/2}q^{(n+1-k)/2}\\[0.2cm]
+            &+\binom{n}{(n+1+k)/2}p^{(n+1+k)/2}q^{(n+1-k)/2}
+            \end{align*}
+            \begin{align*}
+            & =p^{(n+1+k)/2}q^{(n+1-k)/2}\left( \binom{n}{(n-1+k)/2}+\binom{n}{(n+1+k)/2} \right)
+            \end{align*}
+            $=p^{(n+1+k)/2}q^{(n+1-k)/2} \left( \frac{n!}{((n+1-k)/2)!((n-1+k)/2)!} + \frac{n!}{((n-1-k)/2)!((n+1+k)/2)!} \right ) $ \\[0.2cm]
+            $=p^{(n+1+k)/2}q^{(n+1-k)/2} \left( \frac{n!(n+1+k)/2}{((n+1-k)/2)!((n+1+k)/2)!} + \frac{n!(n+1-k)/2}{((n-1-k)/2)!((n+1+k)/2)!} \right ) $
+            \begin{align*}
+            &=p^{(n+1+k)/2}q^{(n+1-k)/2}\frac{n!(n+1)}{((n+1-k)/2)!((n+1+k)/2)!}
+            \end{align*}
+        \end{solucion}
+    \end{enumerate}
+    \end{manualtheorem}
+    \begin{manualtheorem}{4.2}
+    Considere la caminata aleatoria $(S_n)_{n \geq 0}$ definida por $S_0 = 0$ y $$S_n:=X_1+\dots+X_n, n\geq 1,$$
+    donde $(X_k)_{k \geq 1}$ es una familia independiente e idénticamente distribuida de $\{-1,1\}$ variables valuadas aleatoriamente con distribución:
+    $$\left\{\begin{matrix}
+    \p(X_k=+1)=p\\ 
+    \p(X_k=-1)=q
+    \end{matrix}\right.$$
+    $k \geq 1$, donde $p + q = 1$. Sea $R_n$ el rango de $(S_0, \dots, S_n)$,
+    es decir, el número (aleatorio) de valores distintos que aparecen en la secuencia
+    $(S_0, \dots, S_n)$.
+    \renewcommand{\labelenumi}{(\alph{enumi})}
+    \begin{enumerate}
+        \item Explique por qué:
+        $$R_n=1+\left( \sup_{k=0,..,n}S_k \right) -\left( \inf_{k=0,\dots,n}S_k \right)$$
+        y de un valor para $R_0$ y $R_1$
+        \begin{solucion}
+        \end{solucion}
+        
+        \item Demostrar que para todo  $k \geq 1$, $R_k - R_{k-1}$ es una variable aleatoria de Bernoulli y que :
+        $$\p(R_k-R_{k-1}=1)=\p(S_k-S_0 \neq 0 , S_k-S_1\neq 0, \dots, S_k-S_{k-1}\neq 0).$$
+        \begin{solucion}
+        \end{solucion}
+        
+        \item Demuestre que para todo $k \geq 1 $ Se tiene:
+        $$\p(R_k-R_k-1=1)=\p(X_1\neq0,X_1+X_2\neq0,\dots,X_1+\dots+X_k\neq 0).$$
+        \begin{solucion}
+        \end{solucion}
+        
+        \item Demostrar por qué la identidad telescópica $R_n=R_0+\sum^{n}_{k=1}(R_k-R_{k-1})$ se cumple para $n \in \mathbb{N}$
+        \begin{solucion}
+        \end{solucion}
+        
+        \item Demostrar que  $\p(T^{r}_0=\infty)={lim}_{k\rightarrow \infty}\p(T^{r}_{0}>k)$.
+        \begin{solucion}
+        \end{solucion}
+        
+        \item De los resultados de 3 y 4, demostrar que:
+        $$E[R_n]=\sum^{n}_{k=0}\p(T^{r}_{0}>k), n\in \mathbb{N} $$
+        donde $T^{r}_{0}=\inf \{ n\geq 1:S_n=0\}$ es el tiempo del primer regreso a 0 de la caminata aleatoria.
+        \begin{solucion}
+        \end{solucion}
+        
+        \item De los resultados de 5 y 6, demuestre que:
+        $$\p(T^{r}_{0}=\infty)=\lim_{n\rightarrow\infty}\frac{1}{n}\mathbb{E}[R_n]$$
+        \begin{solucion}
+        \end{solucion}
+        
+        \item Demostrar que:
+        $$ {\lim_{n\rightarrow\infty}\frac{1}{n}\mathbb{E}[R_n]=0}$$ donde $p=1/2$, y que $\mathbb{E}[R_n]\simeq_{n\rightarrow \infty} n|p-q|$, cuando $p\neq1/2$.
+        \begin{solucion}
+        \end{solucion}
+    \end{enumerate}
+    \end{manualtheorem}
+    \begin{center}
+        {\small  \bfseries La esencia de las matemáticas radica en su libertad. \\Georg Cantor.}
+    \end{center}
+
+\end{document}
